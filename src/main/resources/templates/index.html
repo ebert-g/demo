@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="pt-br" xmlns:th="http://www.thymeleaf.org">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tarefa</title>
+    <link rel="stylesheet" th:href="@{/index.css}" />
+  </head>
+  <body>
+    <h1>LISTA DE TAREFAS</h1>
+
+    <div th:if="${mengemSucesso}" style="color: green; margin-bottom: 10px">
+      <p th:text="${mensagemSucesso}"></p>
+    </div>
+
+    <div
+      th:if="${not #lists.isEmpty(errors)}"
+      style="color: red; margin-bottom: 10px"
+    >
+      <p>Por favor, corrija os seguintes erros:</p>
+      <ul>
+        <li
+          th:each="error : ${errors}"
+          th:text="${error.getDefaultMessage()}"
+        ></li>
+      </ul>
+    </div>
+
+    <form th:action="@{/add}" method="post">
+      <input
+        type="text"
+        name="nome"
+        placeholder="Nova tarefa..."
+        required
+        th:value="${tarefa?.nome}"
+      />
+      <input
+        type="text"
+        name="descricao"
+        placeholder="Descrição..."
+        required
+        th:value="${tarefa?.descricao}"
+      />
+      <button type="submit">ADD</button>
+    </form>
+    <br />
+    <hr />
+    <br />
+
+    <div th:each="tarefa : ${tarefas}" class="tarefa">
+      <form th:action="@{/alterarEstado}" method="post" style="display: inline">
+        <input type="hidden" name="id" th:value="${tarefa.id}" />
+        <input
+          type="checkbox"
+          onchange="this.form.submit()"
+          th:checked="${tarefa.estado}"
+        />
+        <span
+          th:text="${tarefa.nome + ' - ' + tarefa.descricao}"
+          th:classappend="${tarefa.estado} ? 'concluida' : ''"
+        ></span>
+      </form>
+      [
+      <form th:action="@{/excluir}" method="post" style="display: inline">
+        <input type="hidden" name="id" th:value="${tarefa.id}" />
+        <button
+          style="
+            background: none;
+            border: none;
+            color: #dc3545;
+            cursor: pointer;
+            padding: 0;
+            text-decoration: none;
+          "
+        >
+          Excluir
+        </button>
+      </form>
+      ]
+    </div>
+
+    <div th:if="${#lists.isEmpty(tarefas)}">
+      <p>Nenhum tarefa na lista. Adicione uma nova!</p>
+    </div>
+  </body>
+</html>
