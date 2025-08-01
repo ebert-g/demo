@@ -9,6 +9,9 @@ COPY mvnw .
 COPY .mvn .mvn
 COPY pom.xml .
 
+# ADICIONE ESTA LINHA PARA DAR PERMISSÃO DE EXECUÇÃO AO MVNW
+RUN chmod +x mvnw
+
 # Baixar as dependências Maven para que não sejam rebaixadas toda vez que o código-fonte muda
 RUN ./mvnw dependency:go-offline -B
 
